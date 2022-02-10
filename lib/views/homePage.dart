@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'newCity.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -12,8 +14,12 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: ElevatedButton(
-        onPressed: () {  },
-        child: null,),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => const City()));
+          },
+          child: const Text("Adding"),
+        ),
       ),
     );
   }
