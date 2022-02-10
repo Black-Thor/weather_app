@@ -3,8 +3,7 @@ import 'views/homePage.dart';
 
 void main() {
   runApp(const MaterialApp(
-        title: "Todo App",
-        home: HomePage(),
+    title: "Todo App",
+    home: HomePage(),
   ));
 }
-
