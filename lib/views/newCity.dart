@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../db/notes_database.dart';
+
+void queryNotes() async {
+  var cities = await CityDatabase.instance.readAllNotes();
+  print(cities);
+}
+
+
 class City extends StatelessWidget {
   const City({Key? key}) : super(key: key);
 
@@ -12,18 +20,27 @@ class City extends StatelessWidget {
       ),
       body: Center(
           child: Column(
-        children: const [
+        children: [
           TextField(
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              hintText: 'Quel ville ajouter ? ',
+              hintText: 'nom ? ',
             ),
           ),
-          ElevatedButton(
-            onPressed: null, 
-            child: Text("Add City")),
-        
-          ],
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'lat ? ',
+            ),
+          ),
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'long ? ',
+            ),
+          ),
+          ElevatedButton(onPressed: queryNotes, child: Text("Add City")),
+        ],
       )),
     );
   }
