@@ -4,7 +4,6 @@ import 'package:weather_app/utils/ListPhotos.dart';
 import 'package:weather_app/db/cityDb.dart';
 import 'package:weather_app/services/meteo_service.dart';
 import 'package:weather_app/services/db_service.dart';
-import 'package:weather_app/widgets/drawer.dart';
 import 'package:weather_app/widgets/next_day.dart';
 import '../db/cityDb.dart';
 
@@ -157,7 +156,122 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        drawer: myDrawer(context, cityController),
+        drawer: Drawer(
+          child: FutureBuilder<List>(
+              future: allCities(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: Text("Loading..."));
+                } else if (snapshot.connectionState == ConnectionState.done) {
+                  return ListView.builder(
+                      itemCount: snapshot.data!.length + 1,
+                      itemBuilder: (context, i) {
+                        if (i == 0) {
+                          return DrawerHeader(
+                              decoration:
+                                  const BoxDecoration(color: Colors.black),
+                              child: Column(children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 10.0),
+                                  child: Text(
+                                    "Nom de la ville",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
+                                        child: ElevatedButton(
+                                          child: const Text("Add a City"),
+                                          onPressed: () {
+                                            showModalBottomSheet<void>(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Container(
+                                                  height: 150,
+                                                  color: Colors.white,
+                                                  child: Center(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          TextField(
+                                                            controller:
+                                                                cityController,
+                                                            decoration:
+                                                                const InputDecoration(
+                                                              border:
+                                                                  OutlineInputBorder(),
+                                                              hintText:
+                                                                  'Quel ville ajouter ? ',
+                                                            ),
+                                                          ),
+                                                          Center(
+                                                            child:
+                                                                ElevatedButton(
+                                                              child: const Text(
+                                                                  'Add City'),
+                                                              onPressed: () {
+                                                                Cities cityObj = Cities(
+                                                                    name: cityController
+                                                                        .text
+                                                                        .toString());
+                                                                setState(() {
+                                                                  insertCity(
+                                                                      cityObj);
+                                                                });
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ]));
+                        } else {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(left: 10.0, right: 10.0),
+                            child: ListTile(
+                                title: Text(snapshot.data![i - 1].name),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    setState(() {
+                                      deleteCity(snapshot.data![i - 1].name);
+                                    });
+                                  },
+                                )),
+                          );
+                        }
+                      });
+                } else {
+                  return const Text("An error occured.");
+                }
+              }),
+        ),
       ),
     );
   }

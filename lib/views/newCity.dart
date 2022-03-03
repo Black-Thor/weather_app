@@ -97,10 +97,10 @@ class _CityState extends State<City> {
               child: const Text('delete sharedpref')),
           ElevatedButton(
               onPressed: () => meteoButton(),
-              child: Text('City Data + sharepreference')),
+              child: const Text('City Data + sharepreference')),
           ElevatedButton(
               onPressed: () => cityHourly(cityController),
-              child: Text('City Hourly')),
+              child: const Text('City Hourly')),
         ],
       )),
     );
