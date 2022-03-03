@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
+import 'package:weather_app/models/forecast_weather.dart';
 import 'package:weather_app/models/meteo.dart';
 import 'package:flutter/widgets.dart';
 
@@ -39,8 +40,8 @@ Future<Meteo> cityRequest(cityEntries) async {
   return currentMeteo;
 }
 
-Future cityHourly(cityEntries) async {
-  Meteo futureMeteo = Meteo();
+Future<ForecastWeather> cityHourly(cityEntries) async {
+  ForecastWeather futureMeteo = ForecastWeather();
   List<Location> locations;
   if (cityEntries.runtimeType == String) {
     locations = await locationFromAddress(cityEntries);
@@ -63,7 +64,7 @@ Future cityHourly(cityEntries) async {
   if (response.statusCode == 200) {
     var jsonResponde = jsonDecode(response.body);
     print(jsonResponde);
-    futureMeteo = Meteo.fromJson(jsonResponde);
+    futureMeteo = ForecastWeather.fromJson(jsonResponde);
     return futureMeteo;
   } else {
     print('Failed to get data');
