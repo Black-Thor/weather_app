@@ -46,7 +46,7 @@ class Meteo {
     timezone = json['timezone'];
     id = json['id'];
     name = json['name'];
-    cod = json['cod'];
+    // cod = int.tryParse(json['cod'].toString()) ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -158,7 +158,7 @@ class Wind {
   Wind({this.speed, this.deg});
 
   Wind.fromJson(Map<String, dynamic> json) {
-    speed = json['speed'];
+    speed = double.tryParse(json['speed'].toString()) ?? 0;
     deg = json['deg'];
   }
 
