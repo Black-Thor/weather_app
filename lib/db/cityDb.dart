@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+final Database = _initDb();
+
 class Cities {
   final int id;
   final String name;

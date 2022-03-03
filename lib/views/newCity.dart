@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:weather_app/models/meteo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/meteo_service.dart';
+import 'package:weather_app/db/cityDb.dart';
 
 class City extends StatefulWidget {
   @override
@@ -56,7 +57,43 @@ class _CityState extends State<City> {
               },
               child: const Text('delete sharedpref')),
           ElevatedButton(
-              onPressed: () => meteoButton(), child: Text('City Data'))
+              onPressed: () => meteoButton(), child: Text('City Data')),
+          ElevatedButton(
+              onPressed: () => cityHourly(cityController),
+              child: Text('City Hourly')),
+          ElevatedButton(
+              onPressed: () {
+                showModalBottomSheet<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: 200,
+                      color: Colors.amber,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            TextField(
+                              controller: cityController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Quel ville ajouter ? ',
+                              ),
+                            ),
+                            const Text('Modal BottomSheet'),
+                            ElevatedButton(
+                              child: const Text('Close BottomSheet'),
+                              onPressed: () => Navigator.pop(context),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Text("data"))
         ],
       )),
     );
