@@ -37,6 +37,8 @@ dependencies:
   sqflite: ^2.0.2
   flutter_dotenv: ^5.0.2
   http: ^0.13.4
+  geocoding: ^2.0.2
+  shared_preferences: ^2.0.13
 
 dev_dependencies:
   flutter_test:

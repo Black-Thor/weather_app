@@ -1,30 +1,25 @@
-import '../models/forecast_weather.dart';
-import '../models/meteo.dart';
-
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Cities {
-  final int id;
   final String name;
 
   Cities({
-    required this.id,
     required this.name,
   });
 
   // ignore: empty_constructor_bodies
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'name': name,
     };
   }
 
   @override
   String toString() {
-    return 'Cities{id: $id, name: $name}';
+    return 'Cities{name: $name}';
   }
 }
 
@@ -42,19 +37,18 @@ void _initDb() async {
     version: 1,
   );
 
-  Future<void> insertCity(Cities cityObj) async {
-    final db = await database;
-    await db.insert(
-      'city',
-      cityObj.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
   var london = Cities(
-    id: 0,
     name: 'london',
   );
 
-  await insertCity(london);
+  await insertCity(london, database);
+}
+
+Future<void> insertCity(Cities cityObj, Future<Database> database) async {
+  final db = await database;
+  await db.insert(
+    'city',
+    cityObj.toMap(),
+    conflictAlgorithm: ConflictAlgorithm.replace,
+  );
 }

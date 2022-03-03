@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:sqflite/sqlite_api.dart';
 import 'package:weather_app/utils/ListPhotos.dart';
+import 'package:weather_app/db/cityDb.dart';
+import 'package:weather_app/services/meteo_service.dart';
+import 'package:weather_app/widgets/drawer.dart';
+import 'package:weather_app/widgets/next_day.dart';
+import '../db/cityDb.dart';
 
-import 'newCity.dart';
-
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  final now = "15:01";
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  TextEditingController cityController = TextEditingController();
+
+  String date = ("00" + (DateTime.now().hour).toString())
+          .substring(((DateTime.now().hour).toString()).length) +
+      ":" +
+      ("00" + (DateTime.now().minute).toString())
+          .substring(((DateTime.now().minute).toString()).length);
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +44,7 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           title: const Text("MyWeatherApp"),
           backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -47,7 +62,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    now,
+                    date.toString(),
                     style: const TextStyle(
                       color: Colors.white,
                     ),
@@ -55,10 +70,10 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               Center(
-                  child: Image(image: AssetImage(photoPokemon[3].imagePath))),
+                  child: Image(image: AssetImage(photoPokemon[1].imagePath))),
               Center(
                 child: Text(
-                  photoPokemon[3].name,
+                  photoPokemon[1].name,
                   style: const TextStyle(color: Colors.grey),
                 ),
               ),
@@ -128,10 +143,20 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ],
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: Container(
+                  decoration: const BoxDecoration(
+                      border: Border(
+                          top: BorderSide(width: 1.0, color: Colors.white))),
+                  child: nextDay(photoPokemon),
+                ),
+              ),
             ],
           ),
         ),
+        drawer: myDrawer(context, cityController),
       ),
     );
   }
