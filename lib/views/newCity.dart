@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
-import 'package:weather_app/models/meteo.dart';
+//geocoding
+import 'package:geocoding/geocoding.dart';
+//sharedpreference
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:weather_app/services/db_service.dart';
+//API
 import '../services/meteo_service.dart';
+//db import
+import 'package:weather_app/db/cityDb.dart';
+import 'package:sqflite/sqlite_api.dart';
+import 'package:weather_app/models/meteo.dart';
 
 class City extends StatefulWidget {
   @override
@@ -12,9 +20,24 @@ class City extends StatefulWidget {
 }
 
 class _CityState extends State<City> {
+  /**
+   * cityControler for text filed
+   * int idCity for test 
+   * sharedpreference prefs for global 
+   * databases db , for init db
+   */
   TextEditingController cityController = TextEditingController();
   late int idCity = 0;
   late SharedPreferences prefs;
+  late DatabaseHandler handler;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    handler = DatabaseHandler();
+    // List city  =  await handler.allCities() ;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +55,23 @@ class _CityState extends State<City> {
               hintText: 'Quel ville ajouter ? ',
             ),
           ),
+          ElevatedButton(
+              onPressed: () async {
+                // await addCity(cityController.text.toString());
+                Cities cityObj = Cities(name: cityController.text.toString());
+                handler.insertCity(cityObj);
+              },
+              child: const Text("Save the CITY")),
+          ElevatedButton(
+              onPressed: () async {
+                // final allCity = await allCities(db);
+                // print(allCity);
+                List object = await handler.allCities();
+                for (Cities data in object) {
+                  print(data.name);
+                }
+              },
+              child: const Text("Print the CITY")),
           ElevatedButton(
               onPressed: () {
                 cityRequest(cityController);
@@ -56,7 +96,11 @@ class _CityState extends State<City> {
               },
               child: const Text('delete sharedpref')),
           ElevatedButton(
-              onPressed: () => meteoButton(), child: const Text('City Data'))
+              onPressed: () => meteoButton(),
+              child: Text('City Data + sharepreference')),
+          ElevatedButton(
+              onPressed: () => cityHourly(cityController),
+              child: Text('City Hourly')),
         ],
       )),
     );

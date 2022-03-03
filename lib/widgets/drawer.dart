@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/views/homePage.dart';
+import 'package:weather_app/services/meteo_service.dart';
+import 'package:weather_app/services/db_service.dart';
+
+import '../db/cityDb.dart';
 
 Widget myDrawer(BuildContext context, TextEditingController cityController) {
+  late DatabaseHandler handler;
+
+  getCities() async {
+    List object = await handler.allCities();
+    for (Cities data in object) {
+      print(data.name);
+    }
+  }
+
   return Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
@@ -38,6 +51,9 @@ Widget myDrawer(BuildContext context, TextEditingController cityController) {
                                     border: OutlineInputBorder(),
                                     hintText: 'Quel ville ajouter ? ',
                                   ),
+                                ),
+                                ListTile(
+                                  title: getCities(),
                                 ),
                                 ElevatedButton(
                                   child: const Text('Add City'),
