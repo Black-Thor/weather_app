@@ -9,7 +9,7 @@ class Cities {
   Cities({
     required this.name,
   });
-  Cities.fromMap(Map<String , dynamic?> result) : name = result["name"] ; 
+  Cities.fromMap(Map<String, dynamic?> result) : name = result["name"];
   Map<String, dynamic?> toMap() {
     return {
       'name': name,
@@ -21,4 +21,3 @@ class Cities {
     return 'Cities{name: $name}';
   }
 }
-

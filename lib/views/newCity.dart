@@ -24,7 +24,7 @@ class _CityState extends State<City> {
    * cityControler for text filed
    * int idCity for test 
    * sharedpreference prefs for global 
-   * databases db , for init db 
+   * databases db , for init db
    */
   TextEditingController cityController = TextEditingController();
   late int idCity = 0;
@@ -50,7 +50,7 @@ class _CityState extends State<City> {
         children: [
           TextField(
             controller: cityController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               hintText: 'Quel ville ajouter ? ',
             ),
@@ -79,12 +79,12 @@ class _CityState extends State<City> {
               child: const Text("CITY")),
           ElevatedButton(
               onPressed: () => cityController.clear(),
-              child: Text('clear Field')),
+              child: const Text('clear Field')),
           ElevatedButton(
               onPressed: () {
                 getSharedPreferences(cityController);
               },
-              child: Text("Add City sharedpref")),
+              child: const Text("Add City sharedpref")),
           ElevatedButton(
               onPressed: () {
                 retrieveStringValue();
