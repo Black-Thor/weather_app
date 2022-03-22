@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:weather_app/db/cityDb.dart';
@@ -27,22 +26,13 @@ class DatabaseHandler {
     final db = await _initDB();
     final List<Map<String, dynamic?>> queryResult = await db.query('city_save');
     final query = queryResult.map((e) => Cities.fromMap(e)).toList();
-    //print(queryResult);
-    //print(query);
     return query;
   }
 
   Future<int> deleteCity(String cityObj) async {
     final db = await _initDB();
-    //return await db.rawQuery('DELETE FROM city_save WHERE `name`=${cityObj}');
+    //return await db.rawQuery('DELETE FROM city_save WHERE name=${cityObj}');
     return await db
         .delete('city_save', where: 'name = ?', whereArgs: [cityObj]);
-  }
-
-  Future<int> updateCity(Cities cityObj) async {
-    final db = await _initDB();
-    //return await db.rawQuery('DELETE FROM city_save WHERE `name`=${cityObj}');
-    return await db.update('city_save', cityObj.toMap(),
-        where: 'name = ?', whereArgs: [cityObj]);
   }
 }
