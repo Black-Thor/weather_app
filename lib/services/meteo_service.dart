@@ -34,7 +34,7 @@ Future<Meteo> cityRequest(cityEntries) async {
     currentMeteo = Meteo.fromJson(jsonResponde);
     return currentMeteo;
   } else {
-    print('Failed to get data');
+    throw 'Failed to get data';
   }
 
   return currentMeteo;

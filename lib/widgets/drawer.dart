@@ -6,15 +6,6 @@ import 'package:weather_app/services/db_service.dart';
 import '../db/cityDb.dart';
 
 Widget myDrawer(BuildContext context, TextEditingController cityController) {
-  late DatabaseHandler handler;
-
-  getCities() async {
-    List object = await handler.allCities();
-    for (Cities data in object) {
-      print(data.name);
-    }
-  }
-
   return Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
@@ -53,13 +44,15 @@ Widget myDrawer(BuildContext context, TextEditingController cityController) {
                                   ),
                                 ),
                                 ListTile(
-                                  title: getCities(),
+                                  title: Text('prout'),
                                 ),
                                 ElevatedButton(
                                   child: const Text('Add City'),
-                                  onPressed: () {
-                                    //insertCity(cityController, database);
-                                  },
+                                  onPressed: () {},
+                                ),
+                                ElevatedButton(
+                                  child: const Text('showCity'),
+                                  onPressed: () {},
                                 )
                               ],
                             ),
