@@ -22,9 +22,12 @@ class _HomePageState extends State<HomePage> {
       ":" +
       ("00" + (DateTime.now().minute).toString())
           .substring(((DateTime.now().minute).toString()).length);
+  late DatabaseHandler handler;
 
   @override
   Widget build(BuildContext context) {
+    handler = DatabaseHandler();
+
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -158,7 +161,7 @@ class _HomePageState extends State<HomePage> {
         ),
         drawer: Drawer(
           child: FutureBuilder<List>(
-              future: allCities(),
+              future: handler.allCities(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: Text("Loading..."));
@@ -228,7 +231,7 @@ class _HomePageState extends State<HomePage> {
                                                                         .text
                                                                         .toString());
                                                                 setState(() {
-                                                                  insertCity(
+                                                                  handler.insertCity(
                                                                       cityObj);
                                                                 });
                                                                 Navigator.pop(
@@ -260,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                                   icon: const Icon(Icons.delete),
                                   onPressed: () {
                                     setState(() {
-                                      deleteCity(snapshot.data![i - 1].name);
+                                      handler.deleteCity(snapshot.data![i - 1].name);
                                     });
                                   },
                                 )),
