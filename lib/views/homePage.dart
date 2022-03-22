@@ -7,6 +7,7 @@ import 'package:weather_app/services/db_service.dart';
 import 'package:weather_app/widgets/next_day.dart';
 import '../db/cityDb.dart';
 import '../models/meteo.dart';
+import '../utils/variable.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -34,7 +35,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     handler = DatabaseHandler();
-    //var Temperature = currentData!.main!.temp.toString();
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -58,8 +58,57 @@ class _HomePageState extends State<HomePage> {
         ),
         body: FutureBuilder(
             future: getWeatherData(
-                "Lyon"), //a modifier pour prendre la ville choisie
+                CitySelected), //a modifier pour prendre la ville choisie
             builder: (context, snapshot) {
+              late String weatherImage;
+              String _setImage() {
+                //en switch case à faire
+                String meteoStatus = "${currentData?.weather?[0].main}";
+                print(meteoStatus);
+
+                switch (meteoStatus) {
+                  case "Clear":
+                    return weatherImage = photoPokemon[3].imagePath;
+                  case "Drizzle":
+                    return weatherImage = photoPokemon[3].imagePath;
+                  case "Rain":
+                    return weatherImage = photoPokemon[2].imagePath;
+                  case "Thunderstorm":
+                    return weatherImage = photoPokemon[2].imagePath;
+                  case "Snow":
+                    return weatherImage = photoPokemon[2].imagePath;
+                  case "Clouds":
+                    return weatherImage = photoPokemon[0].imagePath;
+                  default:
+                    return weatherImage = photoPokemon[3].imagePath;
+                }
+                // here it returns your _backgroundImage value
+              }
+
+              String _setStatus() {
+                //en switch case à faire
+                String meteoStatus = "${currentData?.weather?[0].main}";
+                print(meteoStatus);
+
+                switch (meteoStatus) {
+                  case "Clear":
+                    return weatherImage = photoPokemon[3].name;
+                  case "Drizzle":
+                    return weatherImage = photoPokemon[3].name;
+                  case "Rain":
+                    return weatherImage = photoPokemon[2].name;
+                  case "Thunderstorm":
+                    return weatherImage = photoPokemon[2].name;
+                  case "Snow":
+                    return weatherImage = photoPokemon[2].name;
+                  case "Clouds":
+                    return weatherImage = photoPokemon[0].name;
+                  default:
+                    return weatherImage = photoPokemon[3].name;
+                }
+                // here it returns your _backgroundImage value
+              }
+
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -69,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         ElevatedButton(
                           onPressed: () {},
-                          child: const Text("Lyon"),
+                          child: Text(CitySelected),
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Colors.transparent),
@@ -84,12 +133,29 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     Center(
-                        child: Image(
-                            image: AssetImage(photoPokemon[1].imagePath))),
+                      // child: Image(
+                      //     image: AssetImage(photoPokemon[2].imagePath))
+                      child: Image(
+                        width: 230,
+                        image: AssetImage(_setImage()),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                     Center(
                       child: Text(
-                        photoPokemon[1].name,
+                        _setStatus(),
+                        //photoPokemon[1].name,
                         style: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        "station : ${currentData?.name}",
+                        //photoPokemon[1].name,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 30,
+                        ),
                       ),
                     ),
                     Row(
@@ -107,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Text(
-                                  "${currentData?.wind?.speed!}",
+                                  "${currentData?.wind?.speed!} km/h", //vitesse du vent
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
@@ -124,7 +190,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Text(
-                                  "${currentData?.main?.humidity!}",
+                                  "${currentData?.main?.humidity!} %", //humidité
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
@@ -151,10 +217,10 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         Text(
-                          "${currentData?.main?.temp!}",
+                          "${currentData?.main?.temp!.toInt()}°C", //temperature
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 120,
+                            fontSize: 100,
                           ),
                         ),
                       ],
@@ -273,6 +339,11 @@ class _HomePageState extends State<HomePage> {
                                 const EdgeInsets.only(left: 10.0, right: 10.0),
                             child: ListTile(
                                 title: Text(snapshot.data![i - 1].name),
+                                onTap: () {
+                                  setState(() {
+                                    CitySelected = snapshot.data![i - 1].name;
+                                  });
+                                },
                                 trailing: IconButton(
                                   icon: const Icon(Icons.delete),
                                   onPressed: () {

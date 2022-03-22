@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/models/meteo.dart';
+import 'package:weather_app/services/meteo_service.dart';
 
 Widget nextDay(List photoPokemon) {
   return Container(

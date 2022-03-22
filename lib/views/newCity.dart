@@ -14,6 +14,8 @@ import 'package:weather_app/db/cityDb.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:weather_app/models/meteo.dart';
 
+import '../utils/variable.dart';
+
 class City extends StatefulWidget {
   @override
   State<City> createState() => _CityState();
@@ -52,8 +54,8 @@ class _CityState extends State<City> {
           title: const Text("new City adding"),
         ),
         body: FutureBuilder(
-          future:
-              getWeatherData("Lyon "), //a modifier pour prendre en compte BDD
+          future: getWeatherData(
+              CitySelected), //a modifier pour prendre en compte BDD
           builder: (context, snapshot) {
             return Center(
                 child: Column(
