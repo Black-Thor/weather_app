@@ -14,6 +14,8 @@ import 'package:weather_app/db/cityDb.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:weather_app/models/meteo.dart';
 
+import '../utils/variable.dart';
+
 class City extends StatefulWidget {
   @override
   State<City> createState() => _CityState();
@@ -24,12 +26,18 @@ class _CityState extends State<City> {
    * cityControler for text filed
    * int idCity for test 
    * sharedpreference prefs for global 
-   * databases db , for init db 
+   * databases db , for init db
    */
   TextEditingController cityController = TextEditingController();
   late int idCity = 0;
   late SharedPreferences prefs;
   late DatabaseHandler handler;
+  Meteo? currentData;
+
+  Future<void> getWeatherData(cityController) async {
+    print('function getWeather');
+    currentData = await cityRequest(cityController);
+  }
 
   @override
   void initState() {
@@ -42,68 +50,79 @@ class _CityState extends State<City> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("new City adding"),
-      ),
-      body: Center(
-          child: Column(
-        children: [
-          TextField(
-            controller: cityController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Quel ville ajouter ? ',
-            ),
-          ),
-          ElevatedButton(
-              onPressed: () async {
-                // await addCity(cityController.text.toString());
-                Cities cityObj = Cities(name: cityController.text.toString());
-                handler.insertCity(cityObj);
-              },
-              child: const Text("Save the CITY")),
-          ElevatedButton(
-              onPressed: () async {
-                // final allCity = await allCities(db);
-                // print(allCity);
-                List object = await handler.allCities();
-                for (Cities data in object) {
-                  print(data.name);
-                }
-              },
-              child: const Text("Print the CITY")),
-          ElevatedButton(
-              onPressed: () {
-                cityRequest(cityController);
-              },
-              child: const Text("CITY")),
-          ElevatedButton(
-              onPressed: () => cityController.clear(),
-              child: Text('clear Field')),
-          ElevatedButton(
-              onPressed: () {
-                getSharedPreferences(cityController);
-              },
-              child: Text("Add City sharedpref")),
-          ElevatedButton(
-              onPressed: () {
-                retrieveStringValue();
-              },
-              child: const Text('retrieve sharedpref ')),
-          ElevatedButton(
-              onPressed: () {
-                delete();
-              },
-              child: const Text('delete sharedpref')),
-          ElevatedButton(
-              onPressed: () => meteoButton(),
-              child: Text('City Data + sharepreference')),
-          ElevatedButton(
-              onPressed: () => cityHourly(cityController),
-              child: Text('City Hourly')),
-        ],
-      )),
-    );
+        appBar: AppBar(
+          title: const Text("new City adding"),
+        ),
+        body: FutureBuilder(
+          future: getWeatherData(
+              CitySelected), //a modifier pour prendre en compte BDD
+          builder: (context, snapshot) {
+            return Center(
+                child: Column(
+              children: [
+                TextField(
+                  controller: cityController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Quel ville ajouter ? ',
+                  ),
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      print(currentData!.main!.temp!.toInt());
+                    },
+                    child: Text('Temp')),
+                ElevatedButton(
+                    onPressed: () async {
+                      // await addCity(cityController.text.toString());
+                      Cities cityObj =
+                          Cities(name: cityController.text.toString());
+                      handler.insertCity(cityObj);
+                    },
+                    child: const Text("Save the CITY")),
+                ElevatedButton(
+                    onPressed: () async {
+                      // final allCity = await allCities(db);
+                      // print(allCity);
+                      List object = await handler.allCities();
+                      for (Cities data in object) {
+                        print(data.name);
+                      }
+                    },
+                    child: const Text("Print the CITY")),
+                ElevatedButton(
+                    onPressed: () {
+                      cityRequest(cityController);
+                    },
+                    child: const Text("CITY")),
+                ElevatedButton(
+                    onPressed: () => cityController.clear(),
+                    child: const Text('clear Field')),
+                ElevatedButton(
+                    onPressed: () {
+                      getSharedPreferences(cityController);
+                    },
+                    child: const Text("Add City sharedpref")),
+                ElevatedButton(
+                    onPressed: () {
+                      retrieveStringValue();
+                    },
+                    child: const Text('retrieve sharedpref ')),
+                ElevatedButton(
+                    onPressed: () {
+                      delete();
+                    },
+                    child: const Text('delete sharedpref')),
+                ElevatedButton(
+                    onPressed: () => meteoButton(),
+                    child: const Text('City Data + sharepreference')),
+                ElevatedButton(
+                    onPressed: () => cityHourly(cityController),
+                    child: const Text('City Hourly')),
+              ],
+            ));
+          },
+        ));
   }
 
   meteoButton() async {

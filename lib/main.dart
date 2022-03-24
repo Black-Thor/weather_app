@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/views/newCity.dart';
 import 'views/homePage.dart';
-import 'views/newCity.dart';
 
 void main() {
   runApp(MaterialApp(
-    title: "Todo App",
-    home: City(),
+    theme: ThemeData(
+      primarySwatch: Colors.grey,
+    ),
+    home: HomePage(),
   ));
 }
