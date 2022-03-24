@@ -71,7 +71,7 @@ Widget nextDay(List photoPokemon, citySelected) {
                           ),
                           Text("${forecastData!.list![i].weather![0].main}"),
                           Text(
-                            "${forecastData!.list![i].main!.tempMax}°C",
+                            "${forecastData!.list![i].main!.tempMax?.toInt()}°C",
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,

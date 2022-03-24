@@ -9,6 +9,5 @@ void main() {
       primarySwatch: Colors.grey,
     ),
     home: HomePage(),
-    debugShowCheckedModeBanner: false,
   ));
 }
