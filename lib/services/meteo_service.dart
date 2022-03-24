@@ -5,7 +5,7 @@ import 'package:weather_app/models/forecast_weather.dart';
 import 'package:weather_app/models/meteo.dart';
 import 'package:flutter/widgets.dart';
 
-Future<Meteo> cityRequest(cityEntries) async {
+Future<Meteo?> cityRequest(cityEntries) async {
   List<Location> locations;
   Meteo currentMeteo = Meteo();
 
@@ -22,22 +22,17 @@ Future<Meteo> cityRequest(cityEntries) async {
     'lang': 'fr',
     'appid': '109e23b902d8a46b4fcca288e80abc1d'
   });
-
-  print(url);
-
+  //print(url);
   var response = await http.get(url);
-
   if (response.statusCode == 200) {
     var jsonResponde = jsonDecode(response.body);
     print(jsonResponde);
-    print(Meteo.fromJson(jsonResponde));
+   // print(Meteo.fromJson(jsonResponde));
     currentMeteo = Meteo.fromJson(jsonResponde);
     return currentMeteo;
   } else {
-    print('Failed to get data');
+    throw 'Failed to get data';
   }
-
-  return currentMeteo;
 }
 
 Future<ForecastWeather> cityHourly(cityEntries) async {

@@ -6,6 +6,8 @@ import 'package:weather_app/services/meteo_service.dart';
 import 'package:weather_app/services/db_service.dart';
 import 'package:weather_app/widgets/next_day.dart';
 import '../db/cityDb.dart';
+import '../models/meteo.dart';
+import '../utils/variable.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,11 +25,16 @@ class _HomePageState extends State<HomePage> {
       ("00" + (DateTime.now().minute).toString())
           .substring(((DateTime.now().minute).toString()).length);
   late DatabaseHandler handler;
+  Meteo? currentData;
+
+  Future<void> getWeatherData(cityController) async {
+    print('function getWeather');
+    currentData = await cityRequest(cityController);
+  }
 
   @override
   Widget build(BuildContext context) {
     handler = DatabaseHandler();
-
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -49,116 +56,189 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.white,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Text("Lyon"),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.transparent),
+        body: FutureBuilder(
+            future: getWeatherData(
+                CitySelected), //a modifier pour prendre la ville choisie
+            builder: (context, snapshot) {
+              late String weatherImage;
+              String _setImage() {
+                //en switch case à faire
+                String meteoStatus = "${currentData?.weather?[0].main}";
+                print(meteoStatus);
+
+                switch (meteoStatus) {
+                  case "Clear":
+                    return weatherImage = photoPokemon[3].imagePath;
+                  case "Drizzle":
+                    return weatherImage = photoPokemon[3].imagePath;
+                  case "Rain":
+                    return weatherImage = photoPokemon[2].imagePath;
+                  case "Thunderstorm":
+                    return weatherImage = photoPokemon[2].imagePath;
+                  case "Snow":
+                    return weatherImage = photoPokemon[2].imagePath;
+                  case "Clouds":
+                    return weatherImage = photoPokemon[0].imagePath;
+                  default:
+                    return weatherImage = photoPokemon[3].imagePath;
+                }
+                // here it returns your _backgroundImage value
+              }
+
+              String _setStatus() {
+                //en switch case à faire
+                String meteoStatus = "${currentData?.weather?[0].main}";
+                print(meteoStatus);
+
+                switch (meteoStatus) {
+                  case "Clear":
+                    return weatherImage = photoPokemon[3].name;
+                  case "Drizzle":
+                    return weatherImage = photoPokemon[3].name;
+                  case "Rain":
+                    return weatherImage = photoPokemon[2].name;
+                  case "Thunderstorm":
+                    return weatherImage = photoPokemon[2].name;
+                  case "Snow":
+                    return weatherImage = photoPokemon[2].name;
+                  case "Clouds":
+                    return weatherImage = photoPokemon[0].name;
+                  default:
+                    return weatherImage = photoPokemon[3].name;
+                }
+                // here it returns your _backgroundImage value
+              }
+
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text(CitySelected),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.transparent),
+                          ),
+                        ),
+                        Text(
+                          date.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Text(
-                    date.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
+                    Center(
+                      // child: Image(
+                      //     image: AssetImage(photoPokemon[2].imagePath))
+                      child: Image(
+                        width: 230,
+                        image: AssetImage(_setImage()),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Center(
-                  child: Image(image: AssetImage(photoPokemon[1].imagePath))),
-              Center(
-                child: Text(
-                  photoPokemon[1].name,
-                  style: const TextStyle(color: Colors.grey),
+                    Center(
+                      child: Text(
+                        _setStatus(),
+                        //photoPokemon[1].name,
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        "station : ${currentData?.name}",
+                        //photoPokemon[1].name,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 30,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.air,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  "${currentData?.wind?.speed!} km/h", //vitesse du vent
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.opacity_outlined,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  "${currentData?.main?.humidity!} %", //humidité
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.light_mode_outlined,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  "1.5h",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Text(
+                          "${currentData?.main?.temp!.toInt()}°C", //temperature
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 100,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 50),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                top: BorderSide(
+                                    width: 1.0, color: Colors.white))),
+                        child: nextDay(photoPokemon),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Row(
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.air,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Text(
-                            "21 km/h",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.opacity_outlined,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Text(
-                            "90%",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.light_mode_outlined,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Text(
-                            "1.5h",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const Text(
-                    "17°",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 150,
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 50),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          top: BorderSide(width: 1.0, color: Colors.white))),
-                  child: nextDay(photoPokemon),
-                ),
-              ),
-            ],
-          ),
-        ),
+              );
+            }),
         drawer: Drawer(
           child: FutureBuilder<List>(
               future: handler.allCities(),
@@ -259,11 +339,17 @@ class _HomePageState extends State<HomePage> {
                                 const EdgeInsets.only(left: 10.0, right: 10.0),
                             child: ListTile(
                                 title: Text(snapshot.data![i - 1].name),
+                                onTap: () {
+                                  setState(() {
+                                    CitySelected = snapshot.data![i - 1].name;
+                                  });
+                                },
                                 trailing: IconButton(
                                   icon: const Icon(Icons.delete),
                                   onPressed: () {
                                     setState(() {
-                                      handler.deleteCity(snapshot.data![i - 1].name);
+                                      handler.deleteCity(
+                                          snapshot.data![i - 1].name);
                                     });
                                   },
                                 )),
