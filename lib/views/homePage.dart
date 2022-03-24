@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
+import 'package:weather_app/models/forecast_weather.dart';
 import 'package:weather_app/utils/ListPhotos.dart';
 import 'package:weather_app/db/cityDb.dart';
 import 'package:weather_app/services/meteo_service.dart';
@@ -37,17 +38,9 @@ class _HomePageState extends State<HomePage> {
     handler = DatabaseHandler();
     return Container(
       decoration: const BoxDecoration(
-          gradient: LinearGradient(
-        stops: [
-          0.70,
-          1.0,
-        ],
-        begin: Alignment.bottomLeft,
-        end: Alignment.topRight,
-        colors: [
-          Colors.black,
-          Colors.grey,
-        ],
+          image: DecorationImage(
+        image: AssetImage("assets/img/spring.jpeg"),
+        fit: BoxFit.cover,
       )),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -64,11 +57,13 @@ class _HomePageState extends State<HomePage> {
               String _setImage() {
                 //en switch case à faire
                 String meteoStatus = "${currentData?.weather?[0].main}";
-                print(meteoStatus);
-
                 switch (meteoStatus) {
                   case "Clear":
-                    return weatherImage = photoPokemon[3].imagePath;
+                    if (CitySelected == "Kiev") {
+                      return weatherImage = photoPokemon[4].imagePath;
+                    } else {
+                      return weatherImage = photoPokemon[3].imagePath;
+                    }
                   case "Drizzle":
                     return weatherImage = photoPokemon[3].imagePath;
                   case "Rain":
@@ -79,34 +74,11 @@ class _HomePageState extends State<HomePage> {
                     return weatherImage = photoPokemon[2].imagePath;
                   case "Clouds":
                     return weatherImage = photoPokemon[0].imagePath;
+                  case "Mist":
+                    return weatherImage = photoPokemon[2].imagePath;
                   default:
                     return weatherImage = photoPokemon[3].imagePath;
                 }
-                // here it returns your _backgroundImage value
-              }
-
-              String _setStatus() {
-                //en switch case à faire
-                String meteoStatus = "${currentData?.weather?[0].main}";
-                print(meteoStatus);
-
-                switch (meteoStatus) {
-                  case "Clear":
-                    return weatherImage = photoPokemon[3].name;
-                  case "Drizzle":
-                    return weatherImage = photoPokemon[3].name;
-                  case "Rain":
-                    return weatherImage = photoPokemon[2].name;
-                  case "Thunderstorm":
-                    return weatherImage = photoPokemon[2].name;
-                  case "Snow":
-                    return weatherImage = photoPokemon[2].name;
-                  case "Clouds":
-                    return weatherImage = photoPokemon[0].name;
-                  default:
-                    return weatherImage = photoPokemon[3].name;
-                }
-                // here it returns your _backgroundImage value
               }
 
               return Padding(
@@ -117,11 +89,13 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () => Scaffold.of(context).openDrawer(),
                           child: Text(CitySelected),
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Colors.transparent),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
                           ),
                         ),
                         Text(
@@ -133,27 +107,23 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     Center(
-                      // child: Image(
-                      //     image: AssetImage(photoPokemon[2].imagePath))
                       child: Image(
-                        width: 230,
+                        width: 200,
                         image: AssetImage(_setImage()),
                         fit: BoxFit.cover,
                       ),
                     ),
                     Center(
                       child: Text(
-                        _setStatus(),
-                        //photoPokemon[1].name,
-                        style: const TextStyle(color: Colors.grey),
+                        "${currentData?.weather?[0].main}",
+                        style: const TextStyle(color: Colors.black),
                       ),
                     ),
                     Center(
                       child: Text(
-                        "station : ${currentData?.name}",
-                        //photoPokemon[1].name,
+                        CitySelected,
                         style: const TextStyle(
-                          color: Colors.grey,
+                          color: Colors.black,
                           fontSize: 30,
                         ),
                       ),
@@ -165,51 +135,51 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Row(
                               children: [
-                                Padding(
+                                const Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Icon(
                                     Icons.air,
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 Text(
                                   "${currentData?.wind?.speed!} km/h", //vitesse du vent
-                                  style: TextStyle(
-                                    color: Colors.white,
+                                  style: const TextStyle(
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],
                             ),
                             Row(
                               children: [
-                                Padding(
+                                const Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Icon(
                                     Icons.opacity_outlined,
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 Text(
                                   "${currentData?.main?.humidity!} %", //humidité
-                                  style: TextStyle(
-                                    color: Colors.white,
+                                  style: const TextStyle(
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],
                             ),
                             Row(
-                              children: [
+                              children: const [
                                 Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Icon(
                                     Icons.light_mode_outlined,
-                                    color: Colors.grey,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 Text(
                                   "1.5h",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],
@@ -218,8 +188,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Text(
                           "${currentData?.main?.temp!.toInt()}°C", //temperature
-                          style: TextStyle(
-                            color: Colors.white,
+                          style: const TextStyle(
+                            color: Colors.black,
                             fontSize: 100,
                           ),
                         ),
@@ -232,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                             border: Border(
                                 top: BorderSide(
                                     width: 1.0, color: Colors.white))),
-                        child: nextDay(photoPokemon),
+                        child: nextDay(photoPokemon, CitySelected),
                       ),
                     ),
                   ],
@@ -254,11 +224,11 @@ class _HomePageState extends State<HomePage> {
                               decoration:
                                   const BoxDecoration(color: Colors.black),
                               child: Column(children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 10.0),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
                                   child: Text(
-                                    "Nom de la ville",
-                                    style: TextStyle(color: Colors.white),
+                                    CitySelected,
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
                                 Padding(
@@ -340,6 +310,7 @@ class _HomePageState extends State<HomePage> {
                             child: ListTile(
                                 title: Text(snapshot.data![i - 1].name),
                                 onTap: () {
+                                  Navigator.of(context).pop();
                                   setState(() {
                                     CitySelected = snapshot.data![i - 1].name;
                                   });
