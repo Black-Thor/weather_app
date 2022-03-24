@@ -8,6 +8,7 @@ void main() {
     theme: ThemeData(
       primarySwatch: Colors.grey,
     ),
-    home: const HomePage(),
+    home: HomePage(),
+    debugShowCheckedModeBanner: false,
   ));
 }

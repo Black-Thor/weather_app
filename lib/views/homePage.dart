@@ -28,10 +28,28 @@ class _HomePageState extends State<HomePage> {
   late DatabaseHandler handler;
   Meteo? currentData;
 
-  Future<void> getWeatherData(cityController) async {
+  Future getWeatherData(cityController) async {
     print('function getWeather');
+    print(cityController);
     currentData = await cityRequest(cityController);
+    return currentData;
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    launchApp().then((value) {
+      setState(() {
+        CitySelected = value.toString();
+      });
+    });
+  }
+
+  // void initTown() async {
+  //   currentData = await cityRequest(CitySelected);
+  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +67,21 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.white,
         ),
-        body: FutureBuilder(
-            future: getWeatherData(
-                CitySelected), //a modifier pour prendre la ville choisie
-            builder: (context, snapshot) {
+        body: CitySelected == ""
+            ? Text("En cours...")
+            : FutureBuilder(
+                future: getWeatherData(
+                    CitySelected), //a modifier pour prendre la ville choisie
+                builder: (context, snapshot) {
               late String weatherImage;
+                  
               String _setImage() {
+                String meteoStatus;
+                    if (snapshot.connectionState == ConnectionState.waiting)
+                      meteoStatus = "Clear";
+                    else
+                      meteoStatus = "${currentData?.weather?[0].main}";
+                    ;
                 //en switch case à faire
                 String meteoStatus = "${currentData?.weather?[0].main}";
                 switch (meteoStatus) {
@@ -80,13 +107,11 @@ class _HomePageState extends State<HomePage> {
                     return weatherImage = photoPokemon[3].imagePath;
                 }
               }
+                  // }
 
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
                       children: [
                         ElevatedButton(
                           onPressed: () => Scaffold.of(context).openDrawer(),
@@ -98,13 +123,13 @@ class _HomePageState extends State<HomePage> {
                                 MaterialStateProperty.all<Color>(Colors.white),
                           ),
                         ),
-                        Text(
-                          date.toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
+                        Center(
+                          child: Text(
+                            _setStatus(),
+                            //photoPokemon[1].name,
+                            style: const TextStyle(color: Colors.grey),
                           ),
-                        ),
-                      ],
+                        ),                      ],
                     ),
                     Center(
                       child: Image(
@@ -126,14 +151,10 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.black,
                           fontSize: 30,
                         ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
+                            Column(
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.all(8.0),
@@ -313,6 +334,9 @@ class _HomePageState extends State<HomePage> {
                                   Navigator.of(context).pop();
                                   setState(() {
                                     CitySelected = snapshot.data![i - 1].name;
+                                    initTown(CitySelected);
+                                    print("city for init ${CitySelected}");
+
                                   });
                                 },
                                 trailing: IconButton(
