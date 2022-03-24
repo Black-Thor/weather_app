@@ -7,8 +7,8 @@ import 'package:flutter/widgets.dart';
 
 Future<Meteo?> cityRequest(cityEntries) async {
   List<Location> locations;
-  Meteo currentMeteo = Meteo();
-
+  print("cityRequest");
+  print(cityEntries);
   if (cityEntries.runtimeType == String) {
     locations = await locationFromAddress(cityEntries);
   } else {
@@ -23,11 +23,14 @@ Future<Meteo?> cityRequest(cityEntries) async {
     'appid': '109e23b902d8a46b4fcca288e80abc1d'
   });
   //print(url);
+  Meteo currentMeteo = Meteo();
+
   var response = await http.get(url);
   if (response.statusCode == 200) {
     var jsonResponde = jsonDecode(response.body);
     print(jsonResponde);
-   // print(Meteo.fromJson(jsonResponde));
+    // print(Meteo.fromJson(jsonResponde));
+
     currentMeteo = Meteo.fromJson(jsonResponde);
     return currentMeteo;
   } else {
