@@ -30,6 +30,7 @@ Future<Meteo?> cityRequest(cityEntries) async {
     var jsonResponde = jsonDecode(response.body);
     print(jsonResponde);
     // print(Meteo.fromJson(jsonResponde));
+
     currentMeteo = Meteo.fromJson(jsonResponde);
     return currentMeteo;
   } else {

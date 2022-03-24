@@ -49,6 +49,7 @@ class _HomePageState extends State<HomePage> {
   //   currentData = await cityRequest(CitySelected);
   // }
 
+
   @override
   Widget build(BuildContext context) {
     handler = DatabaseHandler();
@@ -391,6 +392,7 @@ class _HomePageState extends State<HomePage> {
                                     CitySelected = snapshot.data![i - 1].name;
                                     initTown(CitySelected);
                                     print("city for init ${CitySelected}");
+
                                   });
                                 },
                                 trailing: IconButton(
