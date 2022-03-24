@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqlite_api.dart';
+import 'package:weather_app/models/forecast_weather.dart';
 import 'package:weather_app/utils/ListPhotos.dart';
 import 'package:weather_app/db/cityDb.dart';
 import 'package:weather_app/services/meteo_service.dart';
@@ -55,17 +56,9 @@ class _HomePageState extends State<HomePage> {
     handler = DatabaseHandler();
     return Container(
       decoration: const BoxDecoration(
-          gradient: LinearGradient(
-        stops: [
-          0.70,
-          1.0,
-        ],
-        begin: Alignment.bottomLeft,
-        end: Alignment.topRight,
-        colors: [
-          Colors.black,
-          Colors.grey,
-        ],
+          image: DecorationImage(
+        image: AssetImage("assets/img/spring.jpeg"),
+        fit: BoxFit.cover,
       )),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -80,113 +73,54 @@ class _HomePageState extends State<HomePage> {
                 future: getWeatherData(
                     CitySelected), //a modifier pour prendre la ville choisie
                 builder: (context, snapshot) {
-                  /**
-               * changement de background  
-               * 
-               */
-                  late String weatherImage;
-
-                  String _setImage() {
-                    String meteoStatus;
+              late String weatherImage;
+                  
+              String _setImage() {
+                String meteoStatus;
                     if (snapshot.connectionState == ConnectionState.waiting)
                       meteoStatus = "Clear";
                     else
                       meteoStatus = "${currentData?.weather?[0].main}";
                     ;
-
-                    print("meteoStatus");
-
-                    print(meteoStatus);
-                    switch (meteoStatus) {
-                      case "Clear":
-                        return weatherImage = photoPokemon[3].imagePath;
-                      case "Drizzle":
-                        return weatherImage = photoPokemon[3].imagePath;
-                      case "Rain":
-                        return weatherImage = photoPokemon[2].imagePath;
-                      case "Thunderstorm":
-                        return weatherImage = photoPokemon[2].imagePath;
-                      case "Snow":
-                        return weatherImage = photoPokemon[2].imagePath;
-                      case "Clouds":
-                        return weatherImage = photoPokemon[0].imagePath;
-                      default:
-                        return weatherImage = photoPokemon[3].imagePath;
+                //en switch case à faire
+                String meteoStatus = "${currentData?.weather?[0].main}";
+                switch (meteoStatus) {
+                  case "Clear":
+                    if (CitySelected == "Kiev") {
+                      return weatherImage = photoPokemon[4].imagePath;
+                    } else {
+                      return weatherImage = photoPokemon[3].imagePath;
                     }
-
-                    // here it returns your _backgroundImage value
-                  }
-
-                  String _setStatus() {
-                    String meteoStatus;
-                    if (snapshot.connectionState == ConnectionState.waiting)
-                      meteoStatus = "Clear";
-                    else
-                      meteoStatus = "${currentData?.weather?[0].main}";
-                    ;
-
-                    print("meteoStatus - 2 ");
-                    print(meteoStatus);
-
-                    switch (meteoStatus) {
-                      case "Clear":
-                        return weatherImage = photoPokemon[3].name;
-                      case "Drizzle":
-                        return weatherImage = photoPokemon[3].name;
-                      case "Rain":
-                        return weatherImage = photoPokemon[2].name;
-                      case "Thunderstorm":
-                        return weatherImage = photoPokemon[2].name;
-                      case "Snow":
-                        return weatherImage = photoPokemon[2].name;
-                      case "Clouds":
-                        return weatherImage = photoPokemon[0].name;
-                      default:
-                        return weatherImage = photoPokemon[3].name;
-                    }
-                    // here it returns your _backgroundImage value
-                  }
-
-                  // timeStamp() {
-                  //   final DateTime date1 =
-                  //       DateTime.fromMillisecondsSinceEpoch(timestamp1 * 1000);
-                  //   return date1;
-
-                  //                                     "${timeStamp(currentData?.sys?.sunset)}",
-
+                  case "Drizzle":
+                    return weatherImage = photoPokemon[3].imagePath;
+                  case "Rain":
+                    return weatherImage = photoPokemon[2].imagePath;
+                  case "Thunderstorm":
+                    return weatherImage = photoPokemon[2].imagePath;
+                  case "Snow":
+                    return weatherImage = photoPokemon[2].imagePath;
+                  case "Clouds":
+                    return weatherImage = photoPokemon[0].imagePath;
+                  case "Mist":
+                    return weatherImage = photoPokemon[2].imagePath;
+                  default:
+                    return weatherImage = photoPokemon[3].imagePath;
+                }
+              }
                   // }
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {},
-                              child: Text(CitySelected),
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.transparent),
-                              ),
-                            ),
-                            Text(
-                              date.toString(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Center(
-                          // child: Image(
-                          //     image: AssetImage(photoPokemon[2].imagePath))
-                          child: Image(
-                            width: 230,
-                            image: AssetImage(_setImage()),
-                            fit: BoxFit.cover,
+                        ElevatedButton(
+                          onPressed: () => Scaffold.of(context).openDrawer(),
+                          child: Text(CitySelected),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.transparent),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
                           ),
                         ),
                         Center(
@@ -195,98 +129,107 @@ class _HomePageState extends State<HomePage> {
                             //photoPokemon[1].name,
                             style: const TextStyle(color: Colors.grey),
                           ),
-                        ),
-                        Center(
-                          child: Text(
-                            "station : ${currentData?.name}",
-                            //photoPokemon[1].name,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 30,
-                            ),
-                          ),
+                        ),                      ],
+                    ),
+                    Center(
+                      child: Image(
+                        width: 200,
+                        image: AssetImage(_setImage()),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        "${currentData?.weather?[0].main}",
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        CitySelected,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 30,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
                               children: [
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.air,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    Text(
-                                      "${currentData?.wind?.speed!} km/h", //vitesse du vent
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.air,
+                                    color: Colors.black,
+                                  ),
                                 ),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.opacity_outlined,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    Text(
-                                      "${currentData?.main?.humidity!} %", //humidité
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.light_mode_outlined,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    Text(
-                                      "1.5h",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  "${currentData?.wind?.speed!} km/h", //vitesse du vent
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ],
                             ),
-                            Text(
-                              "${currentData?.main?.temp!.toInt()}°C", //temperature
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 100,
-                              ),
+                            Row(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.opacity_outlined,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Text(
+                                  "${currentData?.main?.humidity!} %", //humidité
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: const [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.light_mode_outlined,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Text(
+                                  "1.5h",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 50),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    top: BorderSide(
-                                        width: 1.0, color: Colors.white))),
-                            child: nextDay(photoPokemon),
+                        Text(
+                          "${currentData?.main?.temp!.toInt()}°C", //temperature
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 100,
                           ),
                         ),
                       ],
                     ),
-                  );
-                }),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 50),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                top: BorderSide(
+                                    width: 1.0, color: Colors.white))),
+                        child: nextDay(photoPokemon, CitySelected),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
         drawer: Drawer(
           child: FutureBuilder<List>(
               future: handler.allCities(),
@@ -302,11 +245,11 @@ class _HomePageState extends State<HomePage> {
                               decoration:
                                   const BoxDecoration(color: Colors.black),
                               child: Column(children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 10.0),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
                                   child: Text(
-                                    "Nom de la ville",
-                                    style: TextStyle(color: Colors.white),
+                                    CitySelected,
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
                                 Padding(
@@ -388,6 +331,7 @@ class _HomePageState extends State<HomePage> {
                             child: ListTile(
                                 title: Text(snapshot.data![i - 1].name),
                                 onTap: () {
+                                  Navigator.of(context).pop();
                                   setState(() {
                                     CitySelected = snapshot.data![i - 1].name;
                                     initTown(CitySelected);
