@@ -39,6 +39,7 @@ dependencies:
   http: ^0.13.4
   geocoding: ^2.0.2
   shared_preferences: ^2.0.13
+  flutter_native_splash: ^2.1.1
  
 
 dev_dependencies:
@@ -48,7 +49,7 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  image_path: "assets/icons/icon.png"
+  image_path: assets/icons/splash.png
   ios: true
   remove_alpha_ios: true
 

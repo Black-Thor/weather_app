@@ -7,7 +7,15 @@ Widget nextDay(List photoPokemon, citySelected) {
     future: getForecastData(citySelected),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: Text("Loading..."));
+        return  Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.cyanAccent,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+            ),
+          ),
+        );
       } else if (snapshot.connectionState == ConnectionState.done) {
         return Container(
             margin: const EdgeInsets.symmetric(vertical: 20.0),

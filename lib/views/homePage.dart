@@ -67,7 +67,10 @@ class _HomePageState extends State<HomePage> {
           foregroundColor: Colors.white,
         ),
         body: CitySelected == ""
-            ? Text("En cours...")
+            ? CircularProgressIndicator(
+                backgroundColor: Colors.cyanAccent,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+              )
             : FutureBuilder(
                 future: getWeatherData(
                     CitySelected), //a modifier pour prendre la ville choisie
@@ -242,7 +245,12 @@ class _HomePageState extends State<HomePage> {
               future: handler.allCities(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: Text("Loading..."));
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.cyanAccent,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                    ),
+                  );
                 } else if (snapshot.connectionState == ConnectionState.done) {
                   return ListView.builder(
                       itemCount: snapshot.data!.length + 1,
