@@ -31,7 +31,6 @@ class DatabaseHandler {
 
   Future<int> deleteCity(String cityObj) async {
     final db = await _initDB();
-    //return await db.rawQuery('DELETE FROM city_save WHERE name=${cityObj}');
     return await db
         .delete('city_save', where: 'name = ?', whereArgs: [cityObj]);
   }

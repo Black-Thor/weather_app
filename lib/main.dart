@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/views/newCity.dart';
 import 'views/homePage.dart';
 
 void main() {

@@ -22,14 +22,12 @@ Future<Meteo?> cityRequest(cityEntries) async {
     'lang': 'fr',
     'appid': '109e23b902d8a46b4fcca288e80abc1d'
   });
-  //print(url);
   Meteo currentMeteo = Meteo();
 
   var response = await http.get(url);
   if (response.statusCode == 200) {
     var jsonResponde = jsonDecode(response.body);
     print(jsonResponde);
-    // print(Meteo.fromJson(jsonResponde));
 
     currentMeteo = Meteo.fromJson(jsonResponde);
     return currentMeteo;
